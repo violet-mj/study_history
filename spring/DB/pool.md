@@ -11,7 +11,7 @@
 ### 문제점
 - 이렇게 커넥션을 새로 만드는 것은 **과정도 복잡**하고 **시간이 매우 많이 소모**되는 일이다.
 ### Connection Pool
-![이미지 로드 실패](Excalidraw/png/connectionPool.png)
+![이미지 로드 실패](/Excalidraw/png/connectionPool.png)
 - 위 문제를 해결하기 위해 커넥션을 미리 생성해두고 사용하는 방법이다.
 	- 기본 값은 10이지만 서버 스펙에 따라 숫자가 다름
 
