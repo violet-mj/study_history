@@ -84,4 +84,27 @@ com.zaxxer.hikari.pool.HikariPool -- MyPool - Pool stats (total=4, active=2, idl
 ```
 
 - 스레드를 이용하여 모든 커넥션을 만들어 둔 것을 볼 수 있다.
-- `Pool stats (total=4, active=2, idle=2, waiting=0)`2개를 
+- `Pool stats (total=4, active=2, idle=2, waiting=0)`2개를 사용 중이고 나머지는 사용되고 있지 않다
+
+
+```java
+
+private void useDataSource(DataSource dataSource) throws SQLException {  
+  Connection conn1 = dataSource.getConnection(); // Pool 1개  
+  Connection conn2 = dataSource.getConnection(); // Pool 1개 얻을 때까지 기다린다.  
+  Connection conn3 = dataSource.getConnection(); 
+  Connection conn4 = dataSource.getConnection(); 
+  Connection conn5 = dataSource.getConnection(); 
+  Connection conn6 = dataSource.getConnection(); 
+  Connection conn7 = dataSource.getConnection(); 
+  Connection conn8 = dataSource.getConnection(); 
+  Connection conn9 = dataSource.getConnection(); 
+  Connection conn10 = dataSource.getConnection();
+  Connection conn11 = dataSource.getConnection(); 
+  log.info("connection = {}, class = {}", conn1, conn1.getClass());  
+  log.info("connection = {}, class = {}", conn2, conn2.getClass());  
+}
+```
+
+- 풀이 차면 설정에 따라 얼마나 기다릴지 설정할 수 있다.
+- 풀이 차고 설정한 시간이 지나면 time out 된다.
