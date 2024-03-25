@@ -11,7 +11,7 @@
 - [data structure & algorithm]()
 
 ## Problem Solving
-- 
+- [ps](./problem-solving/README.md)
 
 ## Trouble Shooting
 
