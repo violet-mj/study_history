@@ -4,17 +4,17 @@
 
 - 자바에서 데이터베이스에 접속할 수 있도록 하는 자바 API다.
 
-![이미지 로드 실패](/static/jdbcStructure.png)
+![이미지 로드 실패](jdbcStructure.png)
 
   
 
 - java.sql.Connection
     
-    ![image load failed](/static/ConnectionInterface.png)
+    ![image load failed](ConnectionInterface.png)
 
 
     
-    ![이미지 로드 실패](/static/driverManager.png)
+    ![이미지 로드 실패](spring/static/driverManager.png)
 
 _
     

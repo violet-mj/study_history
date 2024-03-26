@@ -108,3 +108,58 @@ private void useDataSource(DataSource dataSource) throws SQLException {
 
 - 풀이 차면 설정에 따라 얼마나 기다릴지 설정할 수 있다.
 - 풀이 차고 설정한 시간이 지나면 time out 된다.
+
+**같은 커넥션을 재사용할 수 있다.**
+![load failed](../static/hikariProxyConnection.png)
+- connection은 같지만 커넥션을 들고 올때마다 히카리 객체는 새로 만든다.
+	- 객체를 생성하는 것 자체는 그렇게 비용이 많이 들지 않음.
+- 왜 커넥션 이름이 전부 conn0일까?
+	- 0번 커넥션을 사용하고 0번 다시 반환 다시 쓸때 0번 가져옴
+	- 커넥션을 conn0이 사용중일때 다른 요청이 들어오면 conn1번을 반환할 것이다.
+
+```java
+  @Test  
+  void crud() throws SQLException {  
+    // save  
+    Member member = new Member("memberV21", 10000);  
+    repository.save(member);  
+	// 커넥션을 사용 후 커넥션 풀에 반환 즉, conn1을 가져와서 반환!
+  
+    // findById  
+    Member findMember = repository.findById(member.getMemberId());  
+    log.info("findMember={}", findMember);  
+    log.info("member == findMember {}", member == findMember);  
+    log.info("member equals findMember {}", member.equals(findMember));  
+    assertThat(findMember).isEqualTo(member);  
+  
+    // update  
+    repository.update(member.getMemberId(), 20000);  
+    Member updatedMember = repository.findById(member.getMemberId());  
+    assertThat(updatedMember.getMoney()).isEqualTo(20000);  
+  
+    // delete  
+    repository.delete(member.getMemberId());  
+    assertThatThrownBy(() -> repository.findById(member.getMemberId()))  
+            .isInstanceOf(NoSuchElementException.class);  
+  
+    try {  
+      Thread.sleep(1000);  
+    } catch (InterruptedException e) {  
+      log.info(e.getMessage());  
+    }  
+  }  
+}
+```
+
+
+### DI
+`DriverManagerDataSource` 에서 `HikariDataSource`로 변경하더라도 `MemberRepositoryV1`의 코드는 전혀 변경하지 않아도 된다. `MemberRepositoryV1`은 추상화된 `DataSource`인터페이스에 의존하기 때문이다.
+
+
+## 정리
+
+**커넥션 풀**
+- 커넥션을 얻는 방법을 추상화 시킨 것
+- 풀에서 꺼내서 쓰고 반환한다.
+- `close()`안에 커넥션을 반환하는 로직이 존대
+ 
