@@ -34,17 +34,17 @@
 
 
 ### 데이터베이스 연결 구조와 DB 세션
-![](/Excalidraw/png/connectionStructure.png)
+![](connectionStructure.png)
 - 클라이언트는 커넥션을 받아와서 커넥션을 맺게된다. db서버는 내부에 세션이라는 것을 만들고 해당 커넥션은 세션을 통해서 실행하게 된다.
 
 
 #### 트랜잭션 사용법
 - 데이터 변경 쿼리를 실행하고 결과를 반영하려면 `commit`을 호출하고, 결과를 반영하고 싶지 않으면 롤백 명령어인 `rollback`을 호출한다.
 - **커밋을 호출하기 전까진 임시로 데이터를 저장**하는 것이다. 해당 사용자만 변경 사항을 볼 수 있고 다른 세션의 사람들은 볼 수 없다.
-![](/Excalidraw/png/transaction1.png)
+![](transaction1.png)
 커밋하지 않은 데이터를 다른 요청이 조회한다면 무슨 문제가 발생할까?
 - 커밋하지 않은 데이터가 보이면, 세션2는 데이터를 조회했을 때 회원2, 3이 보일 것이다. 하지만 세션 1이 롤백하면 데이터 정합성에 문제가 생긴다.
-![](/Excalidraw/png/transaction2.png)
+![](transaction2.png)
 - commit을 하면 세션2도 변경된 결과를 볼 수 있다.
 - 하지만 롤백 시 세션1이 변경한 모든 데이터가 처음 상태로 복구된다.
 
@@ -76,23 +76,23 @@ commit;
 ### DB Lock
 
 
-![](/Excalidraw/png/dblock1.png)
+![](dblock1.png)
 1. 세션 1은 트랜잭션을 시작한다.
 2. 세션 1은 `memberA`의 `money`를 500으로 변경을 시도한다. 이 때 해당 row의 lock을 먼저 획득해야한다. 해당 로우에 락이 있으므로 획득한다.
 3. 획득 후 해당 row에 update sql 수행
 
-![](/Excalidraw/png/dblock2.png)
+![](dblock2.png)
 4. 세션 2가 트랜잭션을 시작.
 5. 세션 2도 `memberA`의 `money`를 변경하려고 시도하지만. 먼저 락을 획득해야한다. 하지만 락이 없으므로 대기한다.
 	- 무한정 대기하지는 않고 락 대기 시간을 넘어가면 락 타임아웃 오류가 발생
 
-![](/Excalidraw/png/dblock3.png)
+![](dblock3.png)
 6. 세션 1이 커밋을 수행하고 커밋으로 트랜잭션이 종료 되었으므로 락도 반납한다.
 
-![](/Excalidraw/png/dblock4.png)
+![](dblock4.png)
 7. 세션 2가 락을 획득하고 update sql를 수행한다.
 
-![](/Excalidraw/png/dblock5.png)
+![](dblock5.png)
 8. 세션 2도 커밋 후 락을 반환한다.
 
 
@@ -147,7 +147,7 @@ void accountTransfer() throws SQLException {
 - 트랜잭션을 시작하려면 커넥션이 필요함
 - 애플리케이션에서 DB 트랜잭션을 사용하려면 **트랜잭션을 사용하는 동안 같은 커넥션을 유지**해야한다.
 	- 같은 커넥션을 유지하려면 커넥션을 파라미터로 전달해서 같은 커넥션이 유지되도록 하는 것이다.
-![](/Excalidraw/png/connectionStructure.png)
+![](connectionStructure.png)
 1. `con = getConnection()`과 같은 커넥션을 얻는 코드가 있으면 안된다.
 2. `con`은 종료되면 안된다.
 

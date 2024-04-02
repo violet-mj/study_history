@@ -1,11 +1,11 @@
 커넥션을 얻는 방법은 JDBC `DriverManager`를 사용하거나, 커넥션 풀을 사용하는 방법이 존재
-![failed](/Excalidraw/png/driverManager.png)
+![failed](spring/static/png/driverManager.png)
 
 - driverManager로 커넥션을 획득하다가 커넥션 풀을 사용하는 방법으로 변경하려면 어떻게 해야할까?
 	- **커넥션을 획득하는 방법을 추상화**
 
 ### dataSource
-![](/Excalidraw/png/dataSource.png)
+![](dataSource.png)
 - 자바는 `jakarta.sql.DataSource` interface를 제공
 - `DataSource`는 **커넥션을 획득 하는 방법을 추상화**하는 인터페이스
 - `DataSource`는 **커넥션 조회**를 위한 인터페이스
@@ -110,7 +110,7 @@ private void useDataSource(DataSource dataSource) throws SQLException {
 - 풀이 차고 설정한 시간이 지나면 time out 된다.
 
 **같은 커넥션을 재사용할 수 있다.**
-![load failed](../static/hikariProxyConnection.png)
+![load failed](hikariProxyConnection.png)
 - connection은 같지만 커넥션을 들고 올때마다 히카리 객체는 새로 만든다.
 	- 객체를 생성하는 것 자체는 그렇게 비용이 많이 들지 않음.
 - 왜 커넥션 이름이 전부 conn0일까?
