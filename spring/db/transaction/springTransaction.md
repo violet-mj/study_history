@@ -1,7 +1,7 @@
 
 ### 문제점
 
-![](applicationStructure.png)
+![](/spring/static/png/applicationStructure.png)
 
 **순수한 서비스 계층**
 - 가장 중요한 계층은 서비스 계층이다. ui나 db 접근 로직은 변경해도 비즈니스 로직은 최대한 그대로 유지해야한다.
@@ -89,14 +89,14 @@ public class MemberServiceV2 {
 - `SQLException`을 잡아서 처리하거나 `throw`를 통해 밖으로 전파해야한다. 
 - `SQLException`은 JDBC 전용 기술이다 기술이 바뀌면 그에 맞는 예외로 변경해야한다.
 
-![](TransactionDiagram.png)
+![](/spring/static/png/TransactionDiagram.png)
 - 만약 JDBC에서 JPA로 바꾸기 위해서는 모든 `@Service`와 `@Repository`의 코드를 변경해야한다.
 - 이를 해결해기 위해 추상화에 의존하게 코드를 수정하자
 
-![](transactionAbsDiagram.png)
+![](/spring/static/png/transactionAbsDiagram.png)
 
 하지만 스프링은 이 추상체와 구현체 모두 제공한다.
-![](transactionSpringDiagram.png)
+![](/spring/static/png/transactionSpringDiagram.png)
 
 ```java
 public interface PlatformTransactionManager extends TransactionManager {
@@ -123,7 +123,7 @@ public interface PlatformTransactionManager extends TransactionManager {
 	- 파라미터로 커넥션을 전달하는 방법은 코드가 지저분해진다.
 	-  커넥션을 넘기는 메서드와 넘기지 않는 메서드를 중복해서 만들어야한다.
 
-![](transactionManager.png)
+![](/spring/static/png/transactionManager.png)
 
 - 스프링은 **트랜잭션 동기화 매니저**를 제공한다. 이것을 쓰레드 로컬(`ThreadLocal`)을 사용해서 커넥션을 동기화해준다. 트랜잭션 매니저는 내부에서 이 트랜잭션 동기화 매니저를 사용한다.
 - 트랜잭션 동기화 매니저는 쓰레드 로컬을 사용하기 때문에 멀티쓰레드 상황에 안전하게 커넥션을 동기화 할 수 있다. 따라서 커넥션이 필요하면 트랜잭션 동기화 매니저를 통해 커넥션을 획득하면 된다. 따라서 이전처럼 파라미터로 커넥션을 전달하지 않아도 된다.
@@ -236,19 +236,19 @@ public class MemberServiceV3_1 {
 
 #### 트랜잭션 매니저 2
 
-![](transactionManager2.png)
+![](/spring/static/png/transactionManager2.png)
 1. 서비스 계층에서 `transactionManager.getTransaction()`을 호출해서 트랜잭션을 시작한다.
 2. 트랜잭션을 시작하려면 먼저 데이터베이스 커넥션이 필요하다. 트랜잭션 매니저는 내부에서 데이터소스를 사용해서 커넥션을 생성한다.
 3. 커넥션을 수동 커밋 모드로 변경해서 실제 데이터베이스 트랜잭션을 시작한다.
 4. 커넥션을 트낼잭션 동기화 매니저에 보관한다.
 5. 트랜잭션 동기화 매니저는 쓰레드 로컬에 커넥션을 보관한다. 따라서 멀티 쓰레드 환경에 안전하게 커넥션을 보관할 수 있다.
 
-![](transactionManager3.png)
+![](/spring/static/png/transactionManager3.png)
 6. 서비스는 비즈니스 로직을 실행하면서 리포지토리의 메서드들을 호출한다. **커넥션을 파라미터로 전달하지 않음**
 7. 리포지토리 메서드들은 트랜잭션이 시작된 커넥션이 필요하다. 리포지토리는 `DataSourceUtils.getConnection()`을 사용해서 트랜잭션 동기화 매니저에 보관된 커넥션을 꺼내서 사용한다. 커넥션, 트랜잭션이 유지
 8. 커넥션을 이용해 sql을 데이터베이스에 전달하여 실행
 
-![](transactionManager4.png)
+![](/spring/static/png/transactionManager4.png)
 9. 비즈니스 로직이 끝나고 트랜잭션을 종료한다. 트랜잭션은 커밋하거나 롤백하면 종료한다.
 10. 트랜잭션을 종료하려면 동기화된 커넥션이 필요하다. 트랜잭션 동기화 매니저를 통해 동기화된 커넥션을 획득한다.
 11. 획득한 커넥션을 통해 트랜지션을 커밋하거나 롤백한다.
@@ -320,12 +320,12 @@ txTemplate.executeWithoutResult((status) -> {
 
 **프록시 도입 전**
 
-![](transaction_AOP1.png)
+![](/spring/static/png/transaction_AOP1.png)
 - 프록시를 도입하기 전에는 서비스 로직에서 트랜잭션을 수행한다.
 
 **프록시 도입 후**
 
-![](transaction_AOP2.png)
+![](/spring/static/png/transaction_AOP2.png)
 - 프록시를 사용하면 트랜잭션을 처리하는 객체와 비즈니스 로직을 처리하는 서비스 객체를 명확하게 분리할 수 있다.
 
 **스프링이 제공하는 트랜잭션 AOP**
@@ -382,7 +382,7 @@ class MemberServiceV3_3Test {
 	- 스프링이 제공하는 트랜잭션 AOP는 스프링 빈에 등록된 트랜잭션 매니저를 찾아서 사용하기 때문에 트랜잭션 매니저를 스프링 빈으로 등록해두어야 한다.
 
 ### **정리**
-![](transactionAopSummary.png)
+![](/spring/static/png/transactionAopSummary.png)
 
 **`SQLException`이 아직 종속되어 있다** 
 

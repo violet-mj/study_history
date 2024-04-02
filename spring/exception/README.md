@@ -1,4 +1,4 @@
-![load failed](ExceptionLayer.png)
+![load failed](/spring/static/png/ExceptionLayer.png)
 
 **`Object`**
 - 예외도 객체이다. 모든 객체의 최상위 부모는 `Object`이므로 예외의 최상위 부모도 `Object`이다.

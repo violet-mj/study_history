@@ -5,7 +5,7 @@
 	- **커넥션을 획득하는 방법을 추상화**
 
 ### dataSource
-![](dataSource.png)
+![](/spring/static/png/dataSource.png)
 - 자바는 `jakarta.sql.DataSource` interface를 제공
 - `DataSource`는 **커넥션을 획득 하는 방법을 추상화**하는 인터페이스
 - `DataSource`는 **커넥션 조회**를 위한 인터페이스
