@@ -33,4 +33,6 @@ spring.datasource.password=...
 		- JDBC `DataSourceTransactionManager`
 		- JPA `JpaTransactionManager`
 
+**스프링은 `transactionManager`와 `dataSource`를 자동등록한다.**
+
 
